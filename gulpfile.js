@@ -1,43 +1,48 @@
-const gulp        = require('gulp');
-const browserSync = require('browser-sync').create();
-const sass        = require('gulp-sass');
+var gulp = require('gulp');
+var browserSync = require('browser-sync').create();
+var pkg = require('./package.json');
 
-// Compile Sass & Inject Into Browser
-gulp.task('sass', function() {
-    return gulp.src(['node_modules/bootstrap/scss/bootstrap.scss', 'src/scss/*.scss'])
-        .pipe(sass())
-        .pipe(gulp.dest("src/css"))
-        .pipe(browserSync.stream());
-});
+// Copy third party libraries from /node_modules into /vendor
+gulp.task('vendor', function() {
 
-// Move JS Files to src/js
-gulp.task('js', function() {
-    return gulp.src(['node_modules/bootstrap/dist/js/bootstrap.min.js', 'node_modules/jquery/dist/jquery.min.js', 'node_modules/tether/dist/js/tether.min.js'])
-        .pipe(gulp.dest("src/js"))
-        .pipe(browserSync.stream());
-});
+  // Bootstrap
+  gulp.src([
+      './node_modules/bootstrap/dist/**/*',
+      '!./node_modules/bootstrap/dist/css/bootstrap-grid*',
+      '!./node_modules/bootstrap/dist/css/bootstrap-reboot*'
+    ])
+    .pipe(gulp.dest('./vendor/bootstrap'))
 
-// Watch Sass & Serve
-gulp.task('serve', ['sass'], function() {
+  // jQuery
+  gulp.src([
+      './node_modules/jquery/dist/*',
+      '!./node_modules/jquery/dist/core.js'
+    ])
+    .pipe(gulp.dest('./vendor/jquery'))
 
-    browserSync.init({
-        server: "./src"
-    });
+  // jQuery Easing
+  gulp.src([
+      'node_modules/jquery.easing/*.js'
+    ])
+    .pipe(gulp.dest('vendor/jquery-easing'))
 
-    gulp.watch(['node_modules/bootstrap/scss/bootstrap.scss', 'src/scss/*.scss'], ['sass']);
-    gulp.watch("src/*.html").on('change', browserSync.reload);
-});
-
-// Move Fonts to src/fonts
-gulp.task('fonts', function() {
-  return gulp.src('node_modules/font-awesome/fonts/*')
-    .pipe(gulp.dest('src/fonts'))
 })
 
-// Move Font Awesome CSS to src/css
-gulp.task('fa', function() {
-  return gulp.src('node_modules/font-awesome/css/font-awesome.min.css')
-    .pipe(gulp.dest('src/css'))
-})
+// Default task
+gulp.task('default', ['vendor']);
 
-gulp.task('default', ['js','serve', 'fa', 'fonts']);
+// Configure the browserSync task
+gulp.task('browserSync', function() {
+  browserSync.init({
+    server: {
+      baseDir: "./"
+    }
+  });
+});
+
+// Dev task
+gulp.task('dev', ['browserSync'], function() {
+  gulp.watch('./css/*.css', browserSync.reload);
+  gulp.watch('./js/*.js', browserSync.reload);
+  gulp.watch('./*.html', browserSync.reload);
+});
