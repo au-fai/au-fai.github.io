@@ -4,8 +4,23 @@
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-scrolling-nav/blob/master/LICENSE)
  */
 
+@font-face {
+  font-family: 'Bamini Tamil';
+  src: url('baamini_0.ttf');
+}
+
 body {
-  background: #4a5a63; 
+  background: #4a5a63;
+}
+
+.logo{
+  flex-shrink:0;
+  flex-grow:0;
+  flex-basis: 230px;
+}
+
+.tamil{
+  font-family:'Bamini Tamil'
 }
 
 header {
@@ -22,9 +37,6 @@ section {
   padding: 150px 0;
 }
 
-.navbar {
-  background: #333; 
-}
 .navbar ul.navbar-nav li a {
   color: #fff !important; 
 }
