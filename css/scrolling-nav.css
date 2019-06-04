@@ -64,3 +64,11 @@ section {
 .navbar ul.navbar-nav li a.green {
   background: #6dbf4a; 
 }
+.carousel{
+  margin-top: 128px;
+  height: 600px;
+}
+.carousel .carousel-item img{
+  height: 600px;
+}
+
